@@ -85,4 +85,50 @@ Watch my advanced morphological processing solution in action:
   - `font = cv2.FONT_HERSHEY_TRIPLEX, size = 0.3`: Professional font, smaller size for text overlays.
   - `colors`: White (contours), Green (centroid/arrows), Cyan (text), Yellow (ROI).
 
-## Task 3 - ...
+## Task 3 - Multi-Color Filter with Motion Tracking
+
+My solution for Task 3 enhances color filtering to detect and track red and blue objects in real-time, optimized for robotics applications. It combines precise color isolation with motion analysis for dynamic scene understanding.
+
+### Overview
+The goal of Task 3 is to filter a robot’s camera feed for a specific color and display it using RoboticsAcademy’s GUI. I’ve extended this by:
+- **Multi-Color Detection**: Simultaneously tracks red and blue objects with distinct overlays.
+- **Precise HSV Filtering**: Uses tight HSV ranges for accurate color isolation.
+- **Morphological Cleaning**: Removes noise and refines object shapes.
+- **Contour Tracking**: Outlines and boxes the largest red and blue objects.
+- **Centroid Marking**: Highlights object centers for targeting.
+- **Motion Analysis**: Estimates velocity and direction of moving objects.
+- **Area Display**: Shows object sizes for scale estimation.
+
+This solution runs in real-time, enabling a robot to detect, track, and respond to colored targets or obstacles efficiently.
+
+### Demo Video
+Watch my multi-color filter with motion tracking in action:
+
+**[Multi-Color Tracking: Red & Blue in Motion](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)**  
+*Replace `YOUR_VIDEO_ID` with the actual YouTube video ID after uploading.*
+
+### Solution Details
+- **File**: `scripts/color_filter.py`
+- **Key Features**:
+  - **Color Conversion**: Uses `cv2.cvtColor()` to transform BGR to HSV for robust filtering.
+  - **Noise Reduction**: Applies `cv2.GaussianBlur()` to smooth the input image.
+  - **Multi-Color Masks**: 
+    - Red: Combines two HSV ranges with `cv2.inRange()` and `cv2.bitwise_or()`.
+    - Blue: Single HSV range for detection.
+  - **Morphological Processing**: Uses `cv2.morphologyEx()` (opening and closing) and `cv2.dilate()` to clean and refine masks.
+  - **Contour Detection**: Finds largest contours for red and blue with `cv2.findContours()`, drawn in white.
+  - **Centroid Tracking**: Computes centers with `cv2.moments()`, marked with green crosses.
+  - **Bounding Boxes**: Draws yellow boxes for red and blue boxes for blue using `cv2.boundingRect()`.
+  - **Motion Tracking**: Calculates velocity (pixels/second) and direction (left/right arrows) using centroid history and time deltas.
+  - **Area Display**: Shows object areas with a professional font near centroids.
+  - **Code Robustness**: Skips invalid frames with `if img is None or img.size == 0`.
+- **Parameters**:
+  - **Red HSV**: `[0, 140, 90]` to `[8, 255, 255]` and `[168, 140, 90]` to `[180, 255, 255]`.
+  - **Blue HSV**: `[100, 150, 50]` to `[140, 255, 255]`.
+  - `kernel = np.ones((5, 5))`: For closing and dilation.
+  - `small_kernel = np.ones((3, 3))`: For opening.
+  - `area > 150`: Minimum contour area for detection.
+  - `red_ratio/blue_ratio > 0.3`: Confidence threshold for color presence.
+  - `dx > 5 / < -5`: Motion direction threshold.
+  - `font = cv2.FONT_HERSHEY_TRIPLEX, size = 0.3`: Professional text for labels.
+  - **Colors**: White (contours), Green (centroids/arrows), Cyan (text), Yellow (red boxes), Blue (blue boxes).
