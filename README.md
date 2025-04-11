@@ -132,3 +132,51 @@ Watch my multi-color filter with motion tracking in action:
   - `dx > 5 / < -5`: Motion direction threshold.
   - `font = cv2.FONT_HERSHEY_TRIPLEX, size = 0.3`: Professional text for labels.
   - **Colors**: White (contours), Green (centroids/arrows), Cyan (text), Yellow (red boxes), Blue (blue boxes).
+
+## Task 4 - Deep Edge Filters with Fine Details
+
+My solution for Task 4 takes edge detection to the next level, extracting fine details and providing rich analysis for robotic applications. It’s built for real-time precision and dynamic scene understanding.
+
+### Overview
+The goal of Task 4 is to apply edge filters to a robot’s camera feed and display the result using RoboticsAcademy’s GUI. I’ve enhanced this by:
+- **Multi-Scale Edge Detection**: Combines fine and coarse Canny edges for both small details and large boundaries.
+- **Edge Enhancement**: Sharpens the image to reveal faint edges.
+- **Dynamic Thresholding**: Adapts Canny thresholds to scene brightness.
+- **Contour Analysis**: Extracts area, perimeter, strength, and convexity for all edges.
+- **Motion Tracking**: Tracks velocity and direction of the largest edge-based object.
+- **Non-Overlapping Labels**: Smartly positions text to handle numerous small details.
+
+This solution delivers a detailed edge map with actionable data, ideal for navigation, obstacle detection, or fine-grained feature extraction in robotics.
+
+### Demo Video
+Watch my deep edge filter solution in action:
+
+**[Deep Edges: Precision in Motion](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)**  
+*Replace `YOUR_VIDEO_ID` with the actual YouTube video ID after uploading.*
+
+### Solution Details
+- **File**: `scripts/edge_filters.py`
+- **Key Features**:
+  - **Grayscale Conversion**: Uses `cv2.cvtColor()` to transform BGR to grayscale.
+  - **Sharpening**: Applies a 3x3 kernel (`[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]`) to boost faint edges.
+  - **Noise Reduction**: Uses `cv2.GaussianBlur()` for a smoother edge base.
+  - **Multi-Scale Canny**: Combines fine (`low=mean*0.3, high=mean*1.0`) and coarse (`low=mean*0.6, high=mean*1.8`) edges with `cv2.bitwise_or()`.
+  - **Edge Overlay**: Blends edges (60%) with the original image (40%) using `cv2.addWeighted()`.
+  - **Contour Detection**: Finds all edge contours with `cv2.findContours()`, drawn in white.
+  - **Detailed Analysis**:
+    - **Area**: `cv2.contourArea()` for size.
+    - **Perimeter**: `cv2.arcLength()` for edge length.
+    - **Strength**: Perimeter/area ratio, labeled “Strong” (>0.5) or “Weak”.
+    - **Convexity**: `cv2.convexHull()` ratio, labeled “Convex” (>0.9) or “Concave”.
+  - **Centroid Tracking**: Marks centers with green crosses via `cv2.moments()`.
+  - **Bounding Boxes**: Draws yellow boxes with `cv2.boundingRect()`.
+  - **Motion Tracking**: Calculates velocity (pixels/second) and direction (arrows) for the largest contour.
+  - **Smart Text**: Full details for the largest contour, area-only for smaller ones with vertical offset to avoid overlap.
+  - **Code Robustness**: Skips invalid frames with `if img is None or img.size == 0`.
+- **Parameters**:
+  - `area > 50`: Minimum contour area for small details.
+  - `strength > 0.5`: Threshold for “Strong” edges.
+  - `convexity > 0.9`: Threshold for “Convex” shapes.
+  - `dx > 5 / < -5`: Motion direction threshold.
+  - `font = cv2.FONT_HERSHEY_TRIPLEX, size = 0.25`: Smaller, professional text.
+  - **Colors**: White (contours), Green (centroids/arrows), Cyan (text), Yellow (boxes).
