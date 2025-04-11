@@ -6,6 +6,14 @@ This repository contains my solutions for the **Basic Computer Vision** exercise
 
 Follow the official [RoboticsAcademy User Guide](https://jderobot.github.io/RoboticsAcademy/user_guide/) for installation instructions.
 
+## Outlines
+Below is a table of contents for quick navigation to each task in this repository:
+
+- [Task 1 - Enhanced Grayscale](#task-1---enhanced-grayscale)
+- [Task 2 - Advanced Morphological Processing](#task-2---advanced-morphological-processing)
+- [Task 3 - Multi-Color Filter with Motion Tracking](#task-3---multi-color-filter-with-motion-tracking)
+- [Task 4 - Deep Edge Filters with Fine Details](#task-4---deep-edge-filters-with-fine-details)
+
 ## Task 1 - Enhanced Grayscale
 
 My solution for Task 1 enhances the basic grayscale task with real-time motion trails and intensity highlights, making it a dynamic and useful tool for robotic vision.
