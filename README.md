@@ -188,3 +188,43 @@ Watch my deep edge filter solution in action:
   - `dx > 5 / < -5`: Motion direction threshold.
   - `font = cv2.FONT_HERSHEY_TRIPLEX, size = 0.25`: Smaller, professional text.
   - **Colors**: White (contours), Green (centroids/arrows), Cyan (text), Yellow (boxes).
+
+graph TD
+    subgraph Browser
+        A[User Browser] -->|HTTP: 127.0.0.1:7164| B[Exercise Page]
+        B --> C[Code Editor]
+        B --> D[Visualization Panels]
+        C -->|WebSocket: 127.0.0.1:8765| E[Django Manager]
+        D -->|WebRTC: 127.0.0.1:1108, 6080| F[WebRTC Stream]
+    end
+
+    subgraph RoboticsAcademy Container
+        E[Django Manager] -->|Port 8000| G[Web Server]
+        E -->|WebSocket Port 8765| H[WebSocket Server]
+        E -->|Sends Code| I[RoboticsBackend Container]
+        J[Gazebo Simulator] -->|ROS2 Topics| K[ROS2 Nodes]
+        J -->|Camera Feed| L[WebRTC Server]
+        L -->|Ports 1108, 6080| F
+        J -->|Port 2303| M[Gazebo Internal]
+        K -->|ROS2 Bridge: Port 7163| N[Exercise ROS2 Topics]
+    end
+
+    subgraph RoboticsBackend Container
+        I --> O[User Code: exercise.py]
+        O -->|Imports| P[HAL.py]
+        O -->|Imports| Q[GUI.py]
+        P -->|ROS2 Topics| K
+        Q -->|ROS2 Topics| K
+        Q -->|Visualization Data| L
+    end
+
+    subgraph Robotics-Database Container
+        R[PostgreSQL] -->|Port 5432| S[Database]
+        E -->|Saves Code| S
+    end
+
+    %% Connections between subgraphs
+    A -->|Accesses| E
+    F -->|Streams To| D
+    I -->|Executes| K
+    S -->|Persistent Storage| E
